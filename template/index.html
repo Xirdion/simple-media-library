@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Simple Media Library</title>
 </head>
 <body>
-
+    <div id="main">
+        <div id="list">
+            <?php foreach ($this->videoList as $video): ?>
+                <?= $video->getName(); ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
 </body>
 </html>
