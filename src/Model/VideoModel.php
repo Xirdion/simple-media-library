@@ -7,18 +7,16 @@ declare(strict_types=1);
  * @link       https://github.com/sowieso-web/contao-basic
  */
 
-namespace App\Video;
+namespace App\Model;
 
-class Video
+use App\Model\Repository\VideoRepository;
+
+class VideoModel extends VideoRepository
 {
     private int $id;
     private string $name;
     private string $title;
     private float $length;
-
-    public function __construct()
-    {
-    }
 
     /**
      * @return int
@@ -82,5 +80,12 @@ class Video
     public function setLength(float $length): void
     {
         $this->length = $length;
+    }
+
+    public function setPropertiesFromArray(array $data): void
+    {
+        foreach ($data as $field => $value) {
+            $this->{$field} = $value;
+        }
     }
 }

@@ -9,16 +9,13 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Video\Video;
-use App\Video\VideoList;
+use App\Controller\ControllerFactory;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
 
 class App
 {
-    /** @var \ArrayIterator<int, Video> */
-    private \ArrayIterator $videoList;
-
     public function init(): void
     {
         // Load the environment variables
@@ -26,30 +23,17 @@ class App
         $filePath = Path::join(PROJECT_DIR, '.env');
         $dotEnv->bootEnv($filePath, 'prod');
 
-        $videoList = new VideoList();
-        $this->videoList = $videoList->getIterator();
+        // Get a request object from PHP super globals
+        $request = Request::createFromGlobals();
 
-        $this->handleRoute();
-    }
-
-    private function handleRoute(): void
-    {
-        $this->showList();
-    }
-
-    private function showList(): void
-    {
-        $video = new Video();
-        $video->setId(1);
-        $video->setName('test-video');
-
-        // Add a video to the list
         try {
-            $this->videoList->append($video);
+            $controller = ControllerFactory::getController($request);
+            $controller->handleRequest();
         } catch (\Exception $e) {
-            // $e->getMessage();
-        }
+            $msg = $e->getMessage();
+            include PROJECT_DIR . 'template/error.html';
 
-        include PROJECT_DIR . 'template/index.html';
+            return;
+        }
     }
 }

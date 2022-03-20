@@ -8,7 +8,19 @@
     <div id="main">
         <div id="list">
             <?php foreach ($this->videoList as $video): ?>
-                <?= $video->getName(); ?>
+                <div class="list__entry">
+                    <div class="list__entry--id">
+                        <?= $video->getId() ?>
+                    </div>
+                    <div class="list__entry--action">
+                        <a href="/video/edit?id=<?= $video->getId() ?>" class="btn btn__icon btn__icon--edit">Edit</a>
+                        <form action="video/delete" method="post" name="video_delete">
+                            <input type="hidden" name="id" value="<?= $video->getId() ?>">
+                            <input type="hidden" name="form_submit" value="video_delete">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
             <?php endforeach; ?>
         </div>
     </div>
