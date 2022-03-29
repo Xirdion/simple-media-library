@@ -15,22 +15,53 @@ class EditController extends AbstractController
 {
     public function handleRequest(): void
     {
-        $id = $this->request->query->get('id');
-        if (null === $id) {
-            throw new \Exception('Missing video ID!');
+        if ($this->request->isMethod('post')) {
+            // Handle form submit
+            $this->handleSubmit();
+
+            return;
         }
 
-        $id = (int) $id;
-        if (!$id) {
-            throw new \Exception('Missing video ID!');
+        // Check if a new model should be created or an existing one updated
+        if (null === $this->request->query->get('id')) {
+            $video = new VideoModel();
+        } else {
+            $video = $this->loadVideoById();
+            if (null === $video) {
+                throw new \Exception('Something went wrong!');
+            }
         }
 
-        $video = VideoModel::findById($id);
-        // TODO: Implement handleRequest() method.
+        $this->renderTemplate(
+            PROJECT_DIR . 'template/form.html',
+            [
+                'formAction' => $this->request->getUri(),
+                'video' => $video,
+            ],
+        );
     }
 
-    public function renderTemplate(): void
+    private function handleSubmit(): void
     {
-        // TODO: Implement renderTemplate() method.
+        $submit = $this->request->request->get('form_submit');
+        if ('video_edit' !== $submit) {
+            return;
+        }
+
+        $id = (int) $this->request->request->get('id');
+        $name = $this->request->request->get('name');
+
+        if (0 === $id) {
+            $video = new VideoModel();
+        } else {
+            $video = VideoModel::findById($id);
+            if (null === $video) {
+                throw new \Exception('Something went wrong!');
+            }
+        }
+        $video->setName($name);
+        $video->save();
+
+        header('Location: ' . $this->request->getSchemeAndHttpHost());
     }
 }

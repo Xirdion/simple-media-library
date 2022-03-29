@@ -26,6 +26,8 @@ class App
         // Get a request object from PHP super globals
         $request = Request::createFromGlobals();
 
+        // Maybe add referer to the session
+
         try {
             $controller = ControllerFactory::getController($request);
             $controller->handleRequest();

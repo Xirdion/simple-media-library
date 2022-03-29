@@ -15,11 +15,10 @@ use App\Model\VideoModel;
 
 class VideoRepository
 {
-    private static VideoRepository $repository;
-    private static Database $database;
-    private static VideoCollection $collection;
+    protected static Database $database;
+    protected static VideoCollection $collection;
     /** @var string[] */
-    private static array $fields;
+    protected static array $fields;
 
     public static function findAll(): ?VideoCollection
     {
@@ -75,16 +74,7 @@ class VideoRepository
         return $video;
     }
 
-    public function save(): void
-    {
-        // Switch between UPDATE AND INSERT if video.id is set or not
-    }
-
-    public function delete(): void
-    {
-    }
-
-    private static function getDatabase(): Database
+    protected static function getDatabase(): Database
     {
         if (false === isset(self::$database)) {
             self::$database = Database::getInstance();
@@ -93,10 +83,10 @@ class VideoRepository
         return self::$database;
     }
 
-    private static function getFields(): array
+    protected static function getFields(): array
     {
         if (false === isset(self::$fields)) {
-            self::$fields = ['id'];
+            self::$fields = ['id', 'name'];
         }
 
         return self::$fields;

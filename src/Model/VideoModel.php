@@ -13,17 +13,17 @@ use App\Model\Repository\VideoRepository;
 
 class VideoModel extends VideoRepository
 {
-    private int $id;
-    private string $name;
-    private string $title;
-    private float $length;
+    protected int $id;
+    protected string $name;
+    protected string $title;
+    protected float $length;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
-        return $this->id;
+        return $this->id ?? null;
     }
 
     /**
@@ -35,11 +35,11 @@ class VideoModel extends VideoRepository
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
     {
-        return $this->name;
+        return $this->name ?? null;
     }
 
     /**
@@ -51,11 +51,11 @@ class VideoModel extends VideoRepository
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
-        return $this->title;
+        return $this->title ?? null;
     }
 
     /**
@@ -67,11 +67,11 @@ class VideoModel extends VideoRepository
     }
 
     /**
-     * @return float
+     * @return float|null
      */
-    public function getLength(): float
+    public function getLength(): ?float
     {
-        return $this->length;
+        return $this->length ?? null;
     }
 
     /**
@@ -86,6 +86,42 @@ class VideoModel extends VideoRepository
     {
         foreach ($data as $field => $value) {
             $this->{$field} = $value;
+        }
+    }
+
+    public function save(): void
+    {
+        // Switch between UPDATE AND INSERT if video.id is set or not
+        if (null === $this->getId()) {
+            $query = 'INSERT INTO video (name) VALUES (?)';
+            $data = [$this->getName()];
+        } else {
+            $query = 'UPDATE video SET name = ? WHERE id = ?';
+            $data = [$this->getName(), $this->getId()];
+        }
+
+        try {
+            static::getDatabase()
+                ->prepare($query)
+                ->execute($data)
+            ;
+        } catch (\Exception $e) {
+            // TODO: Log the exception
+            return;
+        }
+    }
+
+    public function delete(): void
+    {
+        $delete = 'DELETE FROM video WHERE id = ?';
+        try {
+            static::getDatabase()
+                ->prepare($delete)
+                ->execute([$this->getId()])
+            ;
+        } catch (\Exception $e) {
+            // TODO: Log the exception
+            return;
         }
     }
 }

@@ -14,23 +14,18 @@ use App\Model\VideoModel;
 
 class ListController extends AbstractController
 {
-    /** @var \ArrayIterator<int, VideoModel> */
-    private \ArrayIterator $videoList;
-
     public function handleRequest(): void
     {
         $videos = VideoModel::findAll();
         if (null === $videos) {
-            $this->videoList = (new VideoCollection())->getIterator();
+            $videoList = (new VideoCollection())->getIterator();
         } else {
-            $this->videoList = $videos->getIterator();
+            $videoList = $videos->getIterator();
         }
 
-        $this->renderTemplate();
-    }
-
-    public function renderTemplate(): void
-    {
-        include PROJECT_DIR . 'template/index.html';
+        $this->renderTemplate(
+            PROJECT_DIR . 'template/index.html',
+            ['videos' => $videoList],
+        );
     }
 }

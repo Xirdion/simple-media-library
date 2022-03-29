@@ -22,9 +22,11 @@ class ControllerFactory
                 $controller = new ListController($request);
                 break;
             case '/video/edit':
+            case '/video/new':
                 $controller = new EditController($request);
                 break;
             case '/video/delete':
+                $controller = new DeleteController($request);
                 break;
             case '/video/info':
                 break;

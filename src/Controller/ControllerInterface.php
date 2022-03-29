@@ -13,5 +13,11 @@ interface ControllerInterface
 {
     public function handleRequest(): void;
 
-    public function renderTemplate(): void;
+    /**
+     * @param string              $file
+     * @param array<mixed, mixed> $data
+     *
+     * @return void
+     */
+    public function renderTemplate(string $file, array $data): void;
 }

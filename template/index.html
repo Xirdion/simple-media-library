@@ -6,11 +6,17 @@
 </head>
 <body>
     <div id="main">
+        <div id="listHeader">
+            <a href="/video/new" class="listHeader__new">Neu</a>
+        </div>
         <div id="list">
-            <?php foreach ($this->videoList as $video): ?>
+            <?php foreach ($this->videos as $video): ?>
                 <div class="list__entry">
                     <div class="list__entry--id">
                         <?= $video->getId() ?>
+                    </div>
+                    <div class="list__entry--name">
+                        <?= $video->getName() ?>
                     </div>
                     <div class="list__entry--action">
                         <a href="/video/edit?id=<?= $video->getId() ?>" class="btn btn__icon btn__icon--edit">Edit</a>

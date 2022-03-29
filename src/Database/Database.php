@@ -52,7 +52,7 @@ class Database
             throw new \Exception('Empty query string!');
         }
 
-        $query = mysqli_real_escape_string($this->mysqli, $query);
+        // $query = mysqli_real_escape_string($this->mysqli, $query);
         $this->stmt = $this->mysqli->prepare($query);
         $this->query = $query;
 
