@@ -15,8 +15,11 @@
                     <div class="list__entry--id">
                         <?= $video->getId() ?>
                     </div>
-                    <div class="list__entry--name">
-                        <?= $video->getName() ?>
+                    <div class="list__entry--title">
+                        <?= $video->getTitle() ?>
+                    </div>
+                    <div class="list__entry--length">
+                        <?= $video->getLength() ?>
                     </div>
                     <div class="list__entry--action">
                         <a href="/video/edit?id=<?= $video->getId() ?>" class="btn btn__icon btn__icon--edit">Edit</a>

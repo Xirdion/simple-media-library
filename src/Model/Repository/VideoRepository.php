@@ -12,6 +12,7 @@ namespace App\Model\Repository;
 use App\Database\Database;
 use App\Model\Collection\VideoCollection;
 use App\Model\VideoModel;
+use ReflectionClass;
 
 class VideoRepository
 {
@@ -83,10 +84,15 @@ class VideoRepository
         return self::$database;
     }
 
+    /**
+     * @return string[]
+     */
     protected static function getFields(): array
     {
         if (false === isset(self::$fields)) {
-            self::$fields = ['id', 'name'];
+            $reflect = new ReflectionClass(new static());
+            $fields = $reflect->getProperties(\ReflectionProperty::IS_PRIVATE);
+            self::$fields = array_map(static fn ($field) => $field->getName(), $fields);
         }
 
         return self::$fields;

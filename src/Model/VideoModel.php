@@ -10,13 +10,24 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Model\Repository\VideoRepository;
+use DateTimeImmutable;
+use DateTimeInterface;
 
 class VideoModel extends VideoRepository
 {
-    protected int $id;
-    protected string $name;
-    protected string $title;
-    protected float $length;
+    private int $id;
+    private string $title;
+    private int $length = 0;
+    private ?string $actors;
+    private ?string $src;
+    private DateTimeInterface $created_at;
+    private DateTimeInterface $updated_at;
+
+    public function __construct()
+    {
+        $this->created_at = new DateTimeImmutable();
+        $this->updated_at = new DateTimeImmutable();
+    }
 
     /**
      * @return int|null
@@ -37,22 +48,6 @@ class VideoModel extends VideoRepository
     /**
      * @return string|null
      */
-    public function getName(): ?string
-    {
-        return $this->name ?? null;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return string|null
-     */
     public function getTitle(): ?string
     {
         return $this->title ?? null;
@@ -67,43 +62,116 @@ class VideoModel extends VideoRepository
     }
 
     /**
-     * @return float|null
+     * @return int|null
      */
-    public function getLength(): ?float
+    public function getLength(): ?int
     {
         return $this->length ?? null;
     }
 
     /**
-     * @param float $length
+     * @param int $length
      */
-    public function setLength(float $length): void
+    public function setLength(int $length): void
     {
         $this->length = $length;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getActors(): ?string
+    {
+        return $this->actors ?? '';
+    }
+
+    /**
+     * @param string|null $actors
+     */
+    public function setActors(?string $actors): void
+    {
+        $this->actors = $actors;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSrc(): ?string
+    {
+        return $this->src ?? '';
+    }
+
+    /**
+     * @param string|null $src
+     */
+    public function setSrc(?string $src): void
+    {
+        $this->src = $src;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAt(): string
+    {
+        return $this->created_at->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * @param DateTimeInterface $created_at
+     */
+    public function setCreatedAt(DateTimeInterface $created_at): void
+    {
+        $this->created_at = $created_at;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedAt(): string
+    {
+        return $this->updated_at->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * @param DateTimeInterface $updated_at
+     */
+    public function setUpdatedAt(DateTimeInterface $updated_at): void
+    {
+        $this->updated_at = $updated_at;
     }
 
     public function setPropertiesFromArray(array $data): void
     {
         foreach ($data as $field => $value) {
+            $value = match ($field) {
+                'created_at', 'updated_at' => DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value),
+                default => $value,
+            };
             $this->{$field} = $value;
         }
     }
 
     public function save(): void
     {
+        $fields = array_filter(static::getFields(), static fn (string $field) => 'id' !== $field);
+        $methodNames = array_map(static fn (string $field) => implode('', array_map(static fn (string $fieldPart) => ucfirst($fieldPart), explode('_', $field))), $fields);
+        $values = array_map(fn (string $method) => $this->{'get' . $method}(), $methodNames);
+
         // Switch between UPDATE AND INSERT if video.id is set or not
         if (null === $this->getId()) {
-            $query = 'INSERT INTO video (name) VALUES (?)';
-            $data = [$this->getName()];
+            $columns = implode(',', $fields);
+            $query = 'INSERT INTO video (' . $columns . ') VALUES (' . substr(str_repeat('?,', \count($fields)), 0, -1) . ')';
         } else {
-            $query = 'UPDATE video SET name = ? WHERE id = ?';
-            $data = [$this->getName(), $this->getId()];
+            $columns = implode(', ', array_map(static fn (string $field) => $field . ' = ?', $fields));
+            $query = 'UPDATE video SET ' . $columns . ' WHERE id = ?';
+            $values[] = $this->getId();
         }
 
         try {
             static::getDatabase()
                 ->prepare($query)
-                ->execute($data)
+                ->execute($values)
             ;
         } catch (\Exception $e) {
             // TODO: Log the exception

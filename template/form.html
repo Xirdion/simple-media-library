@@ -13,8 +13,20 @@
             <input type="hidden" name="id" value="<?= $this->video->getId() ?>">
             <input type="hidden" name="form_submit" value="video_edit">
             <div class="form-row">
-                <label for="videoName">Name</label>
-                <input type="text" name="name" id="videoName" value="<?= $this->video->getName() ?>">
+                <label for="videoTitle">Titel</label>
+                <input type="text" name="title" id="videoTitle" value="<?= $this->video->getTitle() ?>">
+            </div>
+            <div class="form-row">
+                <label for="videoLength">Länge</label>
+                <input type="text" name="length" id="videoLength" value="<?= $this->video->getLength() ?>">
+            </div>
+            <div class="form-row">
+                <label for="videoActors">Schauspieler</label>
+                <input type="text" name="actors" id="videoActors" value="<?= $this->video->getActors() ?>">
+            </div>
+            <div class="form-row">
+                <label for="videoSrc">Video</label>
+                <input type="file" name="src" id="videoSrc" value="<?= $this->video->getSrc() ?>">
             </div>
             <div class="form-row">
                 <button class="btn btn-primary" type="submit">Speichern</button>

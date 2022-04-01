@@ -49,7 +49,9 @@ class EditController extends AbstractController
         }
 
         $id = (int) $this->request->request->get('id');
-        $name = $this->request->request->get('name');
+        $title = $this->request->request->get('title');
+        $length = (int) $this->request->request->get('length');
+        $actors = $this->request->request->get('actors');
 
         if (0 === $id) {
             $video = new VideoModel();
@@ -59,7 +61,9 @@ class EditController extends AbstractController
                 throw new \Exception('Something went wrong!');
             }
         }
-        $video->setName($name);
+        $video->setTitle($title);
+        $video->setLength($length);
+        $video->setActors($actors);
         $video->save();
 
         header('Location: ' . $this->request->getSchemeAndHttpHost());
