@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 /*
- * @author     https://github.com/Xirdion
- * @link       https://github.com/sowieso-web/contao-basic
+ * @author    https://github.com/Xirdion
+ * @link      https://github.com/Xirdion/simple-media-library
  */
 
 namespace App\Controller;

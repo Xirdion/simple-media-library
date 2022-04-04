@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 /*
- * @author     https://github.com/Xirdion
- * @link       https://github.com/sowieso-web/contao-basic
+ * @author    https://github.com/Xirdion
+ * @link      https://github.com/Xirdion/simple-media-library
  */
 
 namespace App\Model;
@@ -15,11 +15,18 @@ use DateTimeInterface;
 
 class VideoModel extends VideoRepository
 {
+    public const VIDEO_EXTENSIONS = ['mp4', 'webm', 'ogv', 'f4v'];
+    public const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+
     private int $id;
     private string $title;
     private int $length = 0;
     private ?string $actors;
     private ?string $src;
+    private ?string $fileName;
+    private ?string $fileExtension;
+    private int $fileSize;
+    private ?string $fileMimeType;
     private DateTimeInterface $created_at;
     private DateTimeInterface $updated_at;
 
@@ -110,6 +117,78 @@ class VideoModel extends VideoRepository
     }
 
     /**
+     * @return bool
+     */
+    public function hasSrc(): bool
+    {
+        return null !== ($this->src ?? null);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName(): string
+    {
+        return $this->fileName ?? '';
+    }
+
+    /**
+     * @param string|null $fileName
+     */
+    public function setFileName(?string $fileName): void
+    {
+        $this->fileName = $fileName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileExtension(): string
+    {
+        return $this->fileExtension ?? '';
+    }
+
+    /**
+     * @param string|null $fileExtension
+     */
+    public function setFileExtension(?string $fileExtension): void
+    {
+        $this->fileExtension = $fileExtension;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFileSize(): int
+    {
+        return $this->fileSize;
+    }
+
+    /**
+     * @param int|null $fileSize
+     */
+    public function setFileSize(?int $fileSize): void
+    {
+        $this->fileSize = (int) $fileSize;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileMimeType(): string
+    {
+        return $this->fileMimeType ?? '';
+    }
+
+    /**
+     * @param string|null $fileMimeType
+     */
+    public function setFileMimeType(?string $fileMimeType): void
+    {
+        $this->fileMimeType = $fileMimeType;
+    }
+
+    /**
      * @return string
      */
     public function getCreatedAt(): string
@@ -123,6 +202,18 @@ class VideoModel extends VideoRepository
     public function setCreatedAt(DateTimeInterface $created_at): void
     {
         $this->created_at = $created_at;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVideo(): bool
+    {
+        if (null === $this->fileExtension) {
+            return false;
+        }
+
+        return \in_array($this->fileExtension, self::VIDEO_EXTENSIONS, true);
     }
 
     /**

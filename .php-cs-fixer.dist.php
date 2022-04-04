@@ -1,8 +1,8 @@
 <?php
 
 $header = <<<'EOF'
-@author     https://github.com/Xirdion
-@link       https://github.com/sowieso-web/contao-basic
+@author    https://github.com/Xirdion
+@link      https://github.com/Xirdion/simple-media-library
 EOF;
 $finder = PhpCsFixer\Finder::create()
     ->in([

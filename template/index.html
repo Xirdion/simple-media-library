@@ -23,6 +23,9 @@
                     </div>
                     <div class="list__entry--action">
                         <a href="/video/edit?id=<?= $video->getId() ?>" class="btn btn__icon btn__icon--edit">Edit</a>
+                        <button class="btn btn__icon btn__icon--info js-video-info" data-id="<?= $video->getId() ?>">XML-Ansicht</button>
+                        <a href="/video/info?id=<?= $video->getId() ?>&download=1" class="btn btn__icon btn__icon--info">XML-Download</a>
+                        <button class="btn js-video-show" data-id="<?= $video->getId() ?>" data-title="<?= $video->getTitle() ?>" data-is-video="<?= $video->isVideo() ?>">Show</button>
                         <form action="video/delete" method="post" name="video_delete">
                             <input type="hidden" name="id" value="<?= $video->getId() ?>">
                             <input type="hidden" name="form_submit" value="video_delete">
@@ -33,5 +36,20 @@
             <?php endforeach; ?>
         </div>
     </div>
+    <dialog id="xmlDialog" role="dialog" aria-labelledby="dialogTitle" aria-describedby="dialogContent">
+        <h2 id="dialogTitle">XML-Ansicht</h2>
+        <div id="dialogContent"></div>
+        <button class="dialogClose" data-dialog="xmlDialog">Okay</button>
+    </dialog>
+    <dialog id="videoDialog" role="dialog" aria-labelledby="videoTitle" aria-describedby="videoContent">
+        <h2 id="videoTitle"></h2>
+        <div id="videoContent">
+            <video autoplay controls width="600px" src="">
+                Sorry, your browser doesn't support embedded videos.
+            </video>
+        </div>
+        <button class="dialogClose" data-dialog="videoDialog">Schließen</button>
+    </dialog>
+    <script src="/index.js" async type="application/javascript"></script>
 </body>
 </html>

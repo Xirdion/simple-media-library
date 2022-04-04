@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 /*
- * @author     https://github.com/Xirdion
- * @link       https://github.com/sowieso-web/contao-basic
+ * @author    https://github.com/Xirdion
+ * @link      https://github.com/Xirdion/simple-media-library
  */
 
 namespace App;
@@ -31,6 +31,7 @@ class App
         try {
             $controller = ControllerFactory::getController($request);
             $controller->handleRequest();
+            echo $controller->getResponse();
         } catch (\Exception $e) {
             $msg = $e->getMessage();
             include PROJECT_DIR . 'template/error.html';

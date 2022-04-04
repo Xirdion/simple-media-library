@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 /*
- * @author     https://github.com/Xirdion
- * @link       https://github.com/sowieso-web/contao-basic
+ * @author    https://github.com/Xirdion
+ * @link      https://github.com/Xirdion/simple-media-library
  */
 
 namespace App\Controller;
@@ -29,6 +29,10 @@ class ControllerFactory
                 $controller = new DeleteController($request);
                 break;
             case '/video/info':
+                $controller = new InfoController($request);
+                break;
+            case '/video/stream':
+                $controller = new VideoController($request);
                 break;
         }
 
