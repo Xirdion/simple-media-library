@@ -27,28 +27,31 @@ class App
         // Get a request object from PHP super globals
         $request = Request::createFromGlobals();
         $sessionId = $request->cookies->get('PHPSESSID');
-        if (false === $request->hasSession()) {
-            $session = new Session();
-            if ($sessionId) {
-                // Set the id of a previous session
-                $session->setId($sessionId);
-            }
-            $session->start();
-            $request->setSession($session);
-        } else {
-            $session = $request->getSession();
+        $session = new Session();
+        if ($sessionId) {
+            // Set the id of a previous session
+            $session->setId($sessionId);
         }
 
+        // Start the session
+        $session->start();
+
+        // Add the session to the current request
+        $request->setSession($session);
+
         try {
+            // handel the current request
             $controller = ControllerFactory::getController($request);
             $controller->handleRequest();
             echo $controller->getResponse();
             exit();
         } catch (\Exception $e) {
+            header('HTTP/1.0 400 BAD REQUEST');
+
             $msg = $e->getMessage();
             include PROJECT_DIR . 'template/error.html';
 
-            return;
+            exit();
         }
     }
 }

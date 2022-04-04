@@ -36,7 +36,7 @@ class InfoController extends AbstractController
         $download = (int) $this->request->query->get('download');
         if (1 === $download) {
             // Create the file and write to it
-            $file = 'video.xml';
+            $file = 'simple_media_library.xml';
             if (false === file_put_contents($file, $this->response)) {
                 throw new \Exception('Could not create xml file');
             }

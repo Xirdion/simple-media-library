@@ -1,0 +1,141 @@
+html {
+    font-size: 16px;
+    font-family: sans-serif;
+    width: 100%;
+
+    --max-width: 1200px;
+
+    --error-color: #8b0000;
+    --error-background: #ffe4c4;
+
+    --color-light: #FFD700;
+    --color-dark: #00008B;
+
+    --help-color: #4f4f4f;
+}
+
+#main {
+    max-width: var(--max-width);
+    padding: 1rem;
+}
+
+#errorMsg {
+    color: var(--error-color);
+    background: var(--error-background);
+    padding: .5rem;
+    margin-bottom: 2rem;
+}
+
+#errorMsg p {
+    margin: 0;
+}
+
+#listHeader {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-bottom: 1rem;
+}
+
+#listHeader svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+#list {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem 1rem;
+}
+
+#list .list-entry,
+#list .list-action {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 6px;
+    align-items: center;
+}
+
+#list .list-entry {
+    width: 100%;
+}
+
+#list .list-entry:nth-child(2n) {
+    background: #f0f8ff;
+}
+
+#list .entry-headers {
+    background: #00008B;
+    color: #FFD700;
+    font-weight: bold;
+}
+
+#list .column-entry {
+    min-width: 15%;
+}
+
+#list .list-action {
+    min-width: 20%;
+}
+
+.btn {
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--color-dark);
+    background: var(--color-light);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--color-dark);
+    text-align: center;
+    font-size: 1rem;
+    transition: color .5s, background .5s;
+}
+
+.btn:hover {
+    color: var(--color-light);
+    background: var(--color-dark);
+}
+
+.btn svg {
+    width: 1.3rem;
+    height: 1.3rem;
+}
+
+#list .btn {
+    margin-right: .5rem;
+}
+#list .btn:last-child {
+    margin-right: 0;
+}
+
+#editForm {
+    width: 50%;
+}
+
+#editForm .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px 10px;
+    margin-bottom: 1.5rem;
+}
+
+#editForm .form-row.form-row-action {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#editForm input[type="text" i] {
+    font-size: 1rem;
+    padding: 3px 5px;
+}
+
+#editForm small {
+    color: var(--help-color);
+    border: 1px solid var(--help-color);
+    padding: 5px;
+}
+
+#videoDialog img {
+    max-width: 600px;
+}

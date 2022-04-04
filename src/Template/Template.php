@@ -57,6 +57,12 @@ class Template
         $this->data = $data;
     }
 
+    /**
+     * Custom error messages are added to the templates.
+     * The template is included to show the content.
+     *
+     * @return void
+     */
     public function render(): void
     {
         if (true === $this->session->has('errorMsg')) {

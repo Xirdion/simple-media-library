@@ -16,10 +16,16 @@ class XmlGenerator
 {
     private VideoModel $videoModel;
 
+    /**
+     * @param VideoModel $videoModel
+     *
+     * @return string
+     */
     public function generate(VideoModel $videoModel): string
     {
         $this->videoModel = $videoModel;
 
+        // Minimum xml data to start the creation
         $xmlString = <<<'XML'
             <?xml version="1.0" ?>
                 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -35,9 +41,13 @@ class XmlGenerator
             return '';
         }
 
+        // Add the elements that are independent of the video data
         $start = $this->getXmlStartElement($xml);
+
+        // Add the specific video data
         $this->addPropertiesToXml($start);
 
+        // Format the xml correctly
         $result = $xml->asXML();
         $search = ['><', '<xs:complexType', '</xs:complexType', '<xs:sequence>', '</xs:sequence>', '<xs:element'];
         $replace = ['>' . \PHP_EOL . '<', '  <xs:complexType', '  </xs:complexType', '  <xs:sequence>', '  </xs:sequence>', '    <xs:element'];

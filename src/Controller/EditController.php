@@ -36,6 +36,7 @@ class EditController extends AbstractController
             [
                 'formAction' => $this->request->getUri(),
                 'video' => $video,
+                'mode' => (null === $video->getId() ? 'new' : 'edit'),
                 'allowedTypes' => '.' . implode(',.', array_merge(VideoModel::VIDEO_EXTENSIONS, VideoModel::IMAGE_EXTENSIONS)),
                 'maxSize' => $this->getMaxFileSize(),
             ],

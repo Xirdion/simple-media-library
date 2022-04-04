@@ -15,6 +15,7 @@ class ControllerFactory
 {
     public static function getController(Request $request): ControllerInterface
     {
+        // Depending on the given route a specific controller is created
         $pathInfo = $request->getPathInfo();
         $controller = match ($pathInfo) {
             '/' => new ListController($request),
@@ -25,6 +26,7 @@ class ControllerFactory
             default => null,
         };
 
+        // If there is no result throw new error
         if (null === $controller) {
             throw new \Exception('404: Page not found!');
         }
