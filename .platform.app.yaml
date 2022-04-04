@@ -34,6 +34,10 @@ relationships:
     database: 'db:mysql'
 
 
+dependencies:
+    php:
+        composer/composer: '^2'
+
 hooks:
     build: |
         set -e
