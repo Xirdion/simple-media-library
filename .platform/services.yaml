@@ -8,3 +8,7 @@ db:
     type: mariadb:10.5
     # The disk attribute is the size of the persistent disk (in MB) allocated to the service.
     disk: 512
+
+    configuration:
+        properties:
+            max_allowed_packet: 64

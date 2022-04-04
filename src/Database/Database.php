@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace App\Database;
 
+use Platformsh\ConfigReader\Config;
+
 class Database
 {
     private static Database $database;
@@ -18,14 +20,30 @@ class Database
 
     private function __construct()
     {
-        $host = $_SERVER['DB_HOST'];
-        $user = $_SERVER['DB_USER'];
-        $password = $_SERVER['DB_PASSWORD'];
-        $name = $_SERVER['DB_NAME'];
+        try {
+            // Get credentials from platform.sh
+            $config = new Config();
+            $credentials = $config->credentials('database');
+            $host = $credentials['host'];
+            $port = $credentials['port'];
+            $name = $credentials['path'];
+            $user = $credentials['username'];
+            $password = $credentials['password'];
+        } catch (\Exception $e) {
+            // Get credentials form local env file
+            $host = $_SERVER['DB_HOST'];
+            $user = $_SERVER['DB_USER'];
+            $password = $_SERVER['DB_PASSWORD'];
+            $name = $_SERVER['DB_NAME'];
+            $port = 3306;
+        }
+
+
+
 
         // Try to connect to database
         mysqli_report(\MYSQLI_REPORT_ERROR | \MYSQLI_REPORT_STRICT);
-        $this->mysqli = new \mysqli($host, $user, $password, $name);
+        $this->mysqli = new \mysqli($host, $user, $password, $name, $port);
     }
 
     public static function getInstance(): self
