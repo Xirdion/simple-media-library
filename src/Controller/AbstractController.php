@@ -25,19 +25,25 @@ abstract class AbstractController implements ControllerInterface
     /**
      * @throws RuntimeException
      *
-     * @return VideoModel
+     * @return VideoModel|null
      */
-    public function loadVideoById(): VideoModel
+    public function loadVideoById(): ?VideoModel
     {
         // Try to get the video ID from GET or POST parameter
         $id = (int) $this->request->get('id');
         if (!$id) {
-            throw new \RuntimeException('Missing video ID!');
+            $session = $this->request->getSession();
+            $session->set('errorMsg', 'Missing video ID!');
+
+            return null;
         }
 
         $video = VideoModel::findById($id);
         if (null === $video) {
-            throw new \RuntimeException('Video not found!');
+            $session = $this->request->getSession();
+            $session->set('errorMsg', 'Video not found!');
+
+            return null;
         }
 
         return $video;
@@ -52,7 +58,7 @@ abstract class AbstractController implements ControllerInterface
     public function renderTemplate(string $file, array $data): void
     {
         ob_start();
-        $template = new Template($file);
+        $template = new Template($file, $this->request->getSession());
         $template->setData($data);
         $template->render();
 

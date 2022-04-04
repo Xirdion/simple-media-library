@@ -15,26 +15,15 @@ class ControllerFactory
 {
     public static function getController(Request $request): ControllerInterface
     {
-        $controller = null;
         $pathInfo = $request->getPathInfo();
-        switch ($pathInfo) {
-            case '/':
-                $controller = new ListController($request);
-                break;
-            case '/video/edit':
-            case '/video/new':
-                $controller = new EditController($request);
-                break;
-            case '/video/delete':
-                $controller = new DeleteController($request);
-                break;
-            case '/video/info':
-                $controller = new InfoController($request);
-                break;
-            case '/video/stream':
-                $controller = new VideoController($request);
-                break;
-        }
+        $controller = match ($pathInfo) {
+            '/' => new ListController($request),
+            '/video/edit', '/video/new' => new EditController($request),
+            '/video/delete' => new DeleteController($request),
+            '/video/info' => new InfoController($request),
+            '/video/stream' => new VideoController($request),
+            default => null,
+        };
 
         if (null === $controller) {
             throw new \Exception('404: Page not found!');

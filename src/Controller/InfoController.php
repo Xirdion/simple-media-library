@@ -15,12 +15,20 @@ class InfoController extends AbstractController
 {
     public function handleRequest(): void
     {
+        $session = $this->request->getSession();
         if (false === $this->request->isMethod('get')) {
+            $session->set('errorMsg', 'Something went wrong!');
+
             return;
         }
 
         // Try to load the video by request info
         $video = $this->loadVideoById();
+        if (null === $video) {
+            $session->set('errorMsg', 'Something went wrong!');
+
+            return;
+        }
 
         $generator = new XmlGenerator();
         $this->response = $generator->generate($video);

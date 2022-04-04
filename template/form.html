@@ -6,44 +6,51 @@
 </head>
 <body>
     <div id="main">
+        <?php if ($this->errorMsg): ?>
+            <div id="errorMsg">
+                <p><?= $this->errorMsg ?></p>
+            </div>
+        <?php endif; ?>
         <div class="navigation">
             <a href="/" class="btn btn-secondary">Abbrechen</a>
         </div>
-        <form action="<?= $this->formAction ?>" method="post" name="video_edit" enctype="multipart/form-data">
-            <input type="hidden" name="id" value="<?= $this->video->getId() ?>">
-            <input type="hidden" name="form_submit" value="video_edit">
-            <div class="form-row">
-                <label for="videoTitle">Titel</label>
-                <input type="text" name="title" id="videoTitle" value="<?= $this->video->getTitle() ?>">
-            </div>
-            <div class="form-row">
-                <label for="videoLength">Länge in Sekunden</label>
-                <input type="text" name="length" id="videoLength" value="<?= $this->video->getLength() ?>">
-            </div>
-            <div class="form-row">
-                <label for="videoActors">Schauspieler</label>
-                <input type="text" name="actors" id="videoActors" value="<?= $this->video->getActors() ?>">
-            </div>
-            <div class="form-row">
-                <label for="videoSrc">Video</label>
-                <input type="file" name="src" id="videoSrc" accept="<?= $this->allowedTypes ?>">
-                <small>Unterstützte Datei-Formate: <?= implode(', ', explode(',', $this->allowedTypes)) ?></small>
-                <small>Maximale Dateigröße: <?= $this->maxSize ?> MB</small>
-                <?php if ($this->video->hasSrc()): ?>
-                    <p>Aktuelle Datei: <?= $this->video->getFileName() ?></p>
-                    <div id="videoContainer">
-                        <?php if ($this->video->isVideo()): ?>
-                            <video controls width="600px" src="/video/stream?id=<?= $this->video->getId() ?>"></video>
-                        <?php else: ?>
-                            <img src="/video/stream?id=<?= $this->video->getId() ?>" alt="<?= $this->video->getTitle() ?>">
-                        <?php endif; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-            <div class="form-row">
-                <button class="btn btn-primary" type="submit">Speichern</button>
-            </div>
-        </form>
+        <?php if (null !== $this->video): ?>
+            <form action="<?= $this->formAction ?>" method="post" name="video_edit" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<?= $this->video->getId() ?>">
+                <input type="hidden" name="form_submit" value="video_edit">
+                <div class="form-row">
+                    <label for="videoTitle">Titel</label>
+                    <input type="text" name="title" id="videoTitle" value="<?= $this->video->getTitle() ?>">
+                </div>
+                <div class="form-row">
+                    <label for="videoLength">Länge in Sekunden</label>
+                    <input type="text" name="length" id="videoLength" value="<?= $this->video->getLength() ?>">
+                </div>
+                <div class="form-row">
+                    <label for="videoActors">Schauspieler</label>
+                    <input type="text" name="actors" id="videoActors" value="<?= $this->video->getActors() ?>">
+                </div>
+                <div class="form-row">
+                    <label for="videoSrc">Video</label>
+                    <input type="file" name="src" id="videoSrc" accept="<?= $this->allowedTypes ?>">
+                    <small>Unterstützte Datei-Formate: <?= implode(', ', explode(',', $this->allowedTypes)) ?></small>
+                    <small>Maximale Dateigröße: <?= $this->maxSize ?> MB</small>
+                    <?php if ($this->video->hasSrc()): ?>
+                        <p>Aktuelle Datei: <?= $this->video->getFileName() ?></p>
+                        <div id="videoContainer">
+                            <?php if ($this->video->isVideo()): ?>
+                                <video controls width="600px" src="/video/stream?id=<?= $this->video->getId() ?>"></video>
+                            <?php else: ?>
+                                <img src="/video/stream?id=<?= $this->video->getId() ?>" alt="<?= $this->video->getTitle() ?>">
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <div class="form-row">
+                    <button class="btn btn-primary" type="submit">Speichern</button>
+                </div>
+            </form>
+        <?php endif; ?>
     </div>
 </body>
 </html>

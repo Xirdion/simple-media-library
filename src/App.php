@@ -13,6 +13,7 @@ use App\Controller\ControllerFactory;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class App
 {
@@ -25,13 +26,24 @@ class App
 
         // Get a request object from PHP super globals
         $request = Request::createFromGlobals();
-
-        // Maybe add referer to the session
+        $sessionId = $request->cookies->get('PHPSESSID');
+        if (false === $request->hasSession()) {
+            $session = new Session();
+            if ($sessionId) {
+                // Set the id of a previous session
+                $session->setId($sessionId);
+            }
+            $session->start();
+            $request->setSession($session);
+        } else {
+            $session = $request->getSession();
+        }
 
         try {
             $controller = ControllerFactory::getController($request);
             $controller->handleRequest();
             echo $controller->getResponse();
+            exit();
         } catch (\Exception $e) {
             $msg = $e->getMessage();
             include PROJECT_DIR . 'template/error.html';

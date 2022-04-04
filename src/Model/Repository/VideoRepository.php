@@ -13,6 +13,7 @@ use App\Database\Database;
 use App\Model\Collection\VideoCollection;
 use App\Model\VideoModel;
 use ReflectionClass;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class VideoRepository
 {
@@ -21,7 +22,7 @@ class VideoRepository
     /** @var string[] */
     protected static array $fields;
 
-    public static function findAll(): ?VideoCollection
+    public static function findAll(Session $session): ?VideoCollection
     {
         $query = 'SELECT %s FROM video ORDER BY id';
         $query = sprintf($query, implode(', ', self::getFields()));
@@ -32,7 +33,8 @@ class VideoRepository
                 ->execute()
             ;
         } catch (\Exception $e) {
-            // TODO: Log the exception
+            $session->set('errorMsg', $e->getMessage());
+
             return null;
         }
 
@@ -63,12 +65,11 @@ class VideoRepository
             return null;
         }
 
-        if (false === $result) {
-            $row = [];
-        } else {
-            $row = $result->fetch_assoc();
+        if (false === $result || 0 === $result->num_rows) {
+            return null;
         }
 
+        $row = $result->fetch_assoc();
         $video = new VideoModel();
         $video->setPropertiesFromArray($row);
 

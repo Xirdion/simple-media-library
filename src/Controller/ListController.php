@@ -16,7 +16,7 @@ class ListController extends AbstractController
 {
     public function handleRequest(): void
     {
-        $videos = VideoModel::findAll();
+        $videos = VideoModel::findAll($this->request->getSession());
         if (null === $videos) {
             $videoList = (new VideoCollection())->getIterator();
         } else {

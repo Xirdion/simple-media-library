@@ -12,6 +12,7 @@ namespace App\Model;
 use App\Model\Repository\VideoRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class VideoModel extends VideoRepository
 {
@@ -161,7 +162,7 @@ class VideoModel extends VideoRepository
      */
     public function getFileSize(): int
     {
-        return $this->fileSize;
+        return $this->fileSize ?? 0;
     }
 
     /**
@@ -205,18 +206,6 @@ class VideoModel extends VideoRepository
     }
 
     /**
-     * @return bool
-     */
-    public function isVideo(): bool
-    {
-        if (null === $this->fileExtension) {
-            return false;
-        }
-
-        return \in_array($this->fileExtension, self::VIDEO_EXTENSIONS, true);
-    }
-
-    /**
      * @return string
      */
     public function getUpdatedAt(): string
@@ -232,6 +221,18 @@ class VideoModel extends VideoRepository
         $this->updated_at = $updated_at;
     }
 
+    /**
+     * @return bool
+     */
+    public function isVideo(): bool
+    {
+        if (null === $this->fileExtension ?? null) {
+            return false;
+        }
+
+        return \in_array($this->fileExtension, self::VIDEO_EXTENSIONS, true);
+    }
+
     public function setPropertiesFromArray(array $data): void
     {
         foreach ($data as $field => $value) {
@@ -243,7 +244,7 @@ class VideoModel extends VideoRepository
         }
     }
 
-    public function save(): void
+    public function save(Session $session): void
     {
         $fields = array_filter(static::getFields(), static fn (string $field) => 'id' !== $field);
         $methodNames = array_map(static fn (string $field) => implode('', array_map(static fn (string $fieldPart) => ucfirst($fieldPart), explode('_', $field))), $fields);
@@ -265,12 +266,13 @@ class VideoModel extends VideoRepository
                 ->execute($values)
             ;
         } catch (\Exception $e) {
-            // TODO: Log the exception
+            $session->set('errorMsg', $e->getMessage());
+
             return;
         }
     }
 
-    public function delete(): void
+    public function delete(Session $session): void
     {
         $delete = 'DELETE FROM video WHERE id = ?';
         try {
@@ -279,7 +281,8 @@ class VideoModel extends VideoRepository
                 ->execute([$this->getId()])
             ;
         } catch (\Exception $e) {
-            // TODO: Log the exception
+            $session->set('errorMsg', $e->getMessage());
+
             return;
         }
     }

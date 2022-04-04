@@ -36,7 +36,7 @@ class EditController extends AbstractController
             [
                 'formAction' => $this->request->getUri(),
                 'video' => $video,
-                'allowedTypes' => '.' . implode(',.', array_merge($video::VIDEO_EXTENSIONS, $video::IMAGE_EXTENSIONS)),
+                'allowedTypes' => '.' . implode(',.', array_merge(VideoModel::VIDEO_EXTENSIONS, VideoModel::IMAGE_EXTENSIONS)),
                 'maxSize' => $this->getMaxFileSize(),
             ],
         );
@@ -44,8 +44,12 @@ class EditController extends AbstractController
 
     private function handleSubmit(): void
     {
+        $session = $this->request->getSession();
+
         $submit = $this->request->request->get('form_submit');
         if ('video_edit' !== $submit) {
+            $session->set('errorMsg', 'Something went wrong!');
+
             return;
         }
 
@@ -66,21 +70,48 @@ class EditController extends AbstractController
         if (null !== $src) {
             $extensions = array_merge(VideoModel::VIDEO_EXTENSIONS, VideoModel::IMAGE_EXTENSIONS);
             if (false === \in_array($fileExtension, $extensions, true)) {
-                throw new \Exception(sprintf('File with extension %s not allowed!', $fileExtension));
+                $session->set('errorMsg', sprintf('File with extension %s not allowed!', $fileExtension));
+
+                return;
             }
 
             // Compare the file size and the max file size in Bytes
             if ($fileSize > ($this->getMaxFileSize() * 1024 * 1024)) {
-                throw new \Exception('File size is too big!');
+                $session->set('errorMsg', 'File size is too big!');
+
+                return;
             }
         }
 
         if (0 === $id) {
+            if (false === $session->has('uploadData')) {
+                $session->set('uploadData', [1, (new \DateTimeImmutable())->getTimestamp()]);
+            } else {
+                // Check if there have been 5 uploads within a short amount of time
+                [$counter, $time] = (array) $session->get('uploadData');
+                if (5 <= (int) $counter) {
+                    $session->set('errorMsg', 'Im Moment können Sie keine Dateien mehr hochladen. Bitte Warten Sie einige Zeit.');
+
+                    return;
+                }
+
+                $currentTime = new \DateTimeImmutable();
+                $diff = $currentTime->getTimestamp() - (int) $time;
+                if ($diff < 300) {
+                    ++$counter;
+                } else {
+                    // Reset the count as a long time have been passed
+                    $counter = 1;
+                }
+                $session->set('uploadData', [$counter, $currentTime->getTimestamp()]);
+            }
+
             $video = new VideoModel();
         } else {
             $video = VideoModel::findById($id);
+            $session->set('errorMsg', 'Something went wrong!');
             if (null === $video) {
-                throw new \Exception('Something went wrong!');
+                return;
             }
 
             // Set the update date
@@ -98,7 +129,7 @@ class EditController extends AbstractController
             $video->setFileSize($fileSize);
             $video->setFileMimeType($fileMimeType);
         }
-        $video->save();
+        $video->save($this->request->getSession());
 
         header('Location: ' . $this->request->getSchemeAndHttpHost());
     }

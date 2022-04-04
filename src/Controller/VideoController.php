@@ -14,6 +14,12 @@ class VideoController extends AbstractController
     public function handleRequest(): void
     {
         $video = $this->loadVideoById();
+        if (null === $video) {
+            $session = $this->request->getSession();
+            $session->set('errorMsg', 'Something went wrong');
+
+            return;
+        }
 
         // Prepare the headers to stream the video
         header('Content-Disposition: attachment; filename=' . $video->getFileName());

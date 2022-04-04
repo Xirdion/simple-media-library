@@ -9,12 +9,16 @@ declare(strict_types=1);
 
 namespace App\Template;
 
+use Symfony\Component\HttpFoundation\Session\Session;
+
 class Template
 {
     private array $data;
+    private string $errorMsg = '';
 
     public function __construct(
-        private string $template
+        private string $template,
+        private Session $session,
     ) {
     }
 
@@ -55,6 +59,11 @@ class Template
 
     public function render(): void
     {
+        if (true === $this->session->has('errorMsg')) {
+            $this->errorMsg = $this->session->get('errorMsg');
+            $this->session->remove('errorMsg');
+        }
+
         if (file_exists($this->template)) {
             include $this->template;
         }

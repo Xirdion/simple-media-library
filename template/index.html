@@ -6,6 +6,11 @@
 </head>
 <body>
     <div id="main">
+        <?php if ($this->errorMsg): ?>
+            <div id="errorMsg">
+                <p><?= $this->errorMsg ?></p>
+            </div>
+        <?php endif; ?>
         <div id="listHeader">
             <a href="/video/new" class="listHeader__new">Neu</a>
         </div>

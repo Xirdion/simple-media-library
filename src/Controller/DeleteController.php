@@ -13,19 +13,27 @@ class DeleteController extends AbstractController
 {
     public function handleRequest(): void
     {
+        $session = $this->request->getSession();
         if (false === $this->request->isMethod('post')) {
-            throw new \Exception('You cant access the delete route directly!');
+            $session->set('errorMsg', 'You cant access the delete route directly!');
+
+            return;
         }
 
         // Try to load a video instance
         $video = $this->loadVideoById();
+        if (null === $video) {
+            $session->set('errorMsg', 'Something went wrong!');
+
+            return;
+        }
 
         $submit = $this->request->request->get('form_submit');
         if ('video_delete' !== $submit) {
             return;
         }
 
-        $video->delete();
+        $video->delete($this->request->getSession());
         unset($video);
 
         header('Location: ' . $this->request->getSchemeAndHttpHost());
