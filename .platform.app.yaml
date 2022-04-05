@@ -16,10 +16,10 @@ type: 'php:8.1'
 # indicates that the mount point will point to a local directory on the
 # application container. The 'source_path' specifies the subdirectory
 # from within the source that the mount should point at.
-mounts:
-    'web/uploads':
-        source: local
-        source_path: uploads
+#mounts:
+    #'web/uploads':
+        #source: local
+        #source_path: uploads
 
 
 # The size of the persistent disk of the application (in MB).
@@ -47,5 +47,5 @@ hooks:
 web:
     locations:
         '/':
-            root: "\"public\""
-            passthru: "/index.php"
+            root: 'public'
+            passthru: '/index.php'
