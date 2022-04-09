@@ -19,7 +19,7 @@ type: 'php:8.1'
 mounts:
     'web/uploads':
         source: local
-        source_path: /
+        source_path: ~
 
 
 # The size of the persistent disk of the application (in MB).
