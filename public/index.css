@@ -52,9 +52,10 @@ html {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-between;
+    justify-content: space-around;
     padding: 6px;
     align-items: center;
+    min-width: 15%;
 }
 
 #list .list-entry {
@@ -62,7 +63,7 @@ html {
 }
 
 #list .list-entry:nth-child(2n) {
-    background: #f0f8ff;
+    background: #e2f1ff;
 }
 
 #list .entry-headers {
@@ -71,12 +72,10 @@ html {
     font-weight: bold;
 }
 
-#list .column-entry {
-    min-width: 15%;
-}
-
 #list .list-action {
-    min-width: 20%;
+    flex-direction: column;
+    gap: 5px;
+    align-items: start;
 }
 
 .btn {
@@ -98,15 +97,17 @@ html {
 }
 
 .btn svg {
-    width: 1.3rem;
-    height: 1.3rem;
+    width: 1rem;
+    height: 1rem;
 }
 
 #list .btn {
-    margin-right: .5rem;
+    line-height: 1.2rem;
+    font-size: .8rem;
 }
-#list .btn:last-child {
-    margin-right: 0;
+
+#list .btn svg {
+    margin-bottom: -.2rem;
 }
 
 #editForm {
@@ -136,6 +137,7 @@ html {
     padding: 5px;
 }
 
+#editForm #videoContainer img,
 #videoDialog img {
     max-width: 600px;
 }

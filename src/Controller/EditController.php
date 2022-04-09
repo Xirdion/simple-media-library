@@ -110,8 +110,9 @@ class EditController extends AbstractController
             $video = new VideoModel();
         } else {
             $video = VideoModel::findById($id);
-            $session->set('errorMsg', 'Something went wrong!');
             if (null === $video) {
+                $session->set('errorMsg', 'Something went wrong!');
+
                 return;
             }
 

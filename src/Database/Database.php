@@ -38,9 +38,6 @@ class Database
             $port = 3306;
         }
 
-
-
-
         // Try to connect to database
         mysqli_report(\MYSQLI_REPORT_ERROR | \MYSQLI_REPORT_STRICT);
         $this->mysqli = new \mysqli($host, $user, $password, $name, $port);
