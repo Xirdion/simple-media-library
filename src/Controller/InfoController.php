@@ -35,20 +35,13 @@ class InfoController extends AbstractController
 
         $download = (int) $this->request->query->get('download');
         if (1 === $download) {
-            // Create the file and write to it
-            $file = 'simple_media_library.xml';
-            if (false === file_put_contents($file, $this->response)) {
-                throw new \Exception('Could not create xml file');
-            }
-
             header('Content-Description: File Transfer');
-            header('Content-Disposition: attachment; filename=' . basename($file));
+            header('Content-Disposition: attachment; filename=simple_media_library.xml');
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
             header('Pragma: public');
-            header('Content-Length: ' . filesize($file));
             header('Content-Type: text/plain');
-            readfile($file);
+            echo $this->response;
 
             // Stop processing here to download the file immediately
             exit();
