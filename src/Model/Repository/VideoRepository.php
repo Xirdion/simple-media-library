@@ -24,8 +24,9 @@ class VideoRepository
 
     public static function findAll(Session $session): ?VideoCollection
     {
+        $fields = array_filter(self::getFields(), static fn ($field) => 'src' !== $field);
         $query = 'SELECT %s FROM video ORDER BY id';
-        $query = sprintf($query, implode(', ', self::getFields()));
+        $query = sprintf($query, implode(', ', $fields));
 
         try {
             $result = self::getDatabase()
