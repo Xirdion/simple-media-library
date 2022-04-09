@@ -3,7 +3,7 @@ html {
     font-family: sans-serif;
     width: 100%;
 
-    --max-width: 1200px;
+    --max-width: 1600px;
 
     --error-color: #8b0000;
     --error-background: #ffe4c4;
@@ -52,14 +52,17 @@ html {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-around;
+    justify-content: space-between;
     padding: 6px;
     align-items: center;
-    min-width: 15%;
 }
 
 #list .list-entry {
     width: 100%;
+}
+
+#list .column-entry {
+    min-width: 20%;
 }
 
 #list .list-entry:nth-child(2n) {
